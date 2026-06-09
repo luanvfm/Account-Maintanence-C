@@ -91,13 +91,13 @@ int main(void) {
 
         fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
         if (fread(&clienteSaldo, sizeof(cliente), 1, listaClientes) != 0) {
-          printf(" 1-Adicionar Saldo \n 2-Remover Saldo? ");
+          printf(" 1-Adicionar Saldo \n 2-Remover Saldo? \n");
           scanf("%d", &resposta);
 
           if (resposta == 1) {
             printf("Digite a quantia de saldo a ser atualizada: ");
             scanf("%f", &novoSaldo);
-            
+
             clienteSaldo.saldo = clienteSaldo.saldo + novoSaldo;
 
             fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
@@ -115,10 +115,10 @@ int main(void) {
           }
 
         } else {
-            printf("Número da conta não encontrado.");
+          printf("Número da conta não encontrado.");
         }
         break;
-    }
+      }
       case 4:
         break;
       case 5:
@@ -137,7 +137,8 @@ int main(void) {
       case 6: {
 
         char resposta;
-        printf("Você deseja restaurar a ordem de leitura do arquivo de Clientes? S/N \n");
+        printf("Você deseja restaurar a ordem de leitura do arquivo de "
+               "Clientes? S/N \n");
         scanf(" %c", &resposta);
 
         if (resposta == 'S' || resposta == 's') {
@@ -148,6 +149,10 @@ int main(void) {
         } else {
           printf("Resposta inválida.");
         }
+        break;
+      }
+      case 7: {
+        printf("App encerrado! Obrigado pelo uso! \n");
         break;
       }
       default:
