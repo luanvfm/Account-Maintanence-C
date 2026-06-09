@@ -46,7 +46,8 @@ int main(void) {
         fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
         int teste = fread(&novoCliente, sizeof(cliente), 1, listaClientes);
         if (teste != 0) {
-          printf("A posição desejada já está preenchida em nossos cadastros.");
+          printf(
+              "A posição desejada já está preenchida em nossos cadastros. \n");
           break;
         } else {
           printf("Informe o nome do Cliente: \n");
@@ -61,8 +62,24 @@ int main(void) {
         }
         break;
       };
-      case 2:
-        break;
+      case 2: {
+
+        int numeroConta;
+        cliente contaConsultada;
+        printf("Digite o número da conta do cliente que vôce deseja consultar: \n");
+        scanf("%d", &numeroConta);
+
+        fseek(listaClientes, sizeof(cliente) * numeroConta, SEEK_SET);
+        if (fread(&contaConsultada, sizeof(cliente), 1, listaClientes) != 0) {
+            
+            printf("Nome: %s. \n Saldo: %.2f. \n Conta: %d.", contaConsultada.nome, contaConsultada.saldo, contaConsultada.numeroConta);
+        } else {
+            printf("Nenhuma conta encontrada com esse número.");
+        };
+
+      }
+
+      break;
       case 3:
         break;
       case 4:
