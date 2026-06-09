@@ -80,11 +80,45 @@ int main(void) {
           printf("Nenhuma conta encontrada com esse número.");
         };
 
-      }
-      break;
-      case 3:
-      
+      } break;
+      case 3: {
+        float novoSaldo;
+        cliente clienteSaldo;
+        int resposta;
+        int numConta;
+        printf("Qual o número da conta que deseja fazer alteração? \n");
+        scanf("%d", &numConta);
+
+        fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
+        if (fread(&clienteSaldo, sizeof(cliente), 1, listaClientes) != 0) {
+          printf(" 1-Adicionar Saldo \n 2-Remover Saldo? ");
+          scanf("%d", &resposta);
+
+          if (resposta == 1) {
+            printf("Digite a quantia de saldo a ser atualizada: ");
+            scanf("%f", &novoSaldo);
+            
+            clienteSaldo.saldo = clienteSaldo.saldo + novoSaldo;
+
+            fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
+            fwrite(&clienteSaldo, sizeof(cliente), 1, listaClientes);
+          } else if (resposta == 2) {
+            printf("Digite a quantidade de saldo a ser removido: ");
+            scanf("%f", &novoSaldo);
+
+            clienteSaldo.saldo = clienteSaldo.saldo - novoSaldo;
+
+            fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
+            fwrite(&clienteSaldo, sizeof(cliente), 1, listaClientes);
+          } else {
+            printf("A operação digitada é inválida.");
+          }
+
+        } else {
+            printf("Número da conta não encontrado.");
+        }
         break;
+    }
       case 4:
         break;
       case 5:
@@ -100,8 +134,22 @@ int main(void) {
         }
 
         break;
-      case 6:
+      case 6: {
+
+        char resposta;
+        printf("Você deseja restaurar a ordem de leitura do arquivo de Clientes? S/N \n");
+        scanf(" %c", &resposta);
+
+        if (resposta == 'S' || resposta == 's') {
+          printf("Ordem de leitura do arquivo restaurada!");
+          rewind(listaClientes);
+        } else if (resposta == 'N' || resposta == 'n') {
+          printf("A ordem de leitura dos arquivos se manteve.");
+        } else {
+          printf("Resposta inválida.");
+        }
         break;
+      }
       default:
         printf("A opção digitada é inválida");
         break;
