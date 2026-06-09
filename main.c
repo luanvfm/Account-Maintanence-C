@@ -5,7 +5,7 @@
 
 int menu() {
   int opcao;
-  printf("\n 1. Cadastrar um novo cliente em uma posição específica. \n 2. "
+  printf("\n1. Cadastrar um novo cliente em uma posição específica. \n2. "
          "Consultar um cliente pelo número da conta. \n3. Atualizar o saldo de "
          "um cliente. \n4. Encerra conta (remover cliente). \n5. Listar todos "
          "os clientes. \n6. Restaurar a leitura do arquivo do início com "
@@ -68,6 +68,17 @@ int main(void) {
       case 4:
         break;
       case 5:
+        rewind(listaClientes);
+        cliente lerClientes;
+        // Enquanto ID de clientes for <= contadorID , lê o arquivo e printa o
+        // NOME e ID do Cliente
+        while (fread(&lerClientes, sizeof(cliente), 1, listaClientes) == 1) {
+          if (lerClientes.id != 0) {
+            printf("O nome do Cliente %d é %s \n", lerClientes.id,
+                   lerClientes.nome);
+          }
+        }
+
         break;
       case 6:
         break;
