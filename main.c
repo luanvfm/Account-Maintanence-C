@@ -43,8 +43,11 @@ int main(void) {
         printf("Informe a posição que deseja cadastrar o Cliente: \n");
         scanf("%d", &posicao);
 
-        if (posicao == posicaoData) {
-          // Cliente ja existente
+        fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
+        int teste = fread(&novoCliente, sizeof(cliente), 1, listaClientes);
+        if (teste != 0) {
+          printf("A posição desejada já está preenchida em nossos cadastros.");
+          break;
         } else {
           printf("Informe o nome do Cliente: \n");
           scanf("%154s", novoCliente.nome);
