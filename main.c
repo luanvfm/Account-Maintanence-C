@@ -15,16 +15,17 @@ int menu() {
 }
 
 typedef struct Cliente {
-  int id;
-  char nome[155];
-  int numeroConta;
-  float saldo;
+  int id;          // 4 bytes
+  char nome[155];  // 155 bytes
+  int numeroConta; // 4 bytes
+  float saldo;     // 4 bytes
 } cliente;
 
 int main(void) {
   int escolha;
+  int contadorID = 0;
   FILE *listaClientes;
-  listaClientes = fopen("clientes.dat", "ab+");
+  listaClientes = fopen("clientes.dat", "rb+");
 
   if (listaClientes == NULL) {
     printf("Erro ao abrir o arquivo \n");
@@ -33,10 +34,30 @@ int main(void) {
       escolha = menu();
 
       switch (escolha) {
-      case 1:
-        printf("Vamos fazer o seu Cadastro, informe seu nome: \n");
-        
+      case 1: {
+
+        contadorID += 1;
+        int posicao;
+        cliente novoCliente;
+
+        printf("Informe a posição que deseja cadastrar o Cliente: \n");
+        scanf("%d", &posicao);
+
+        if (posicao == posicaoData) {
+          // Cliente ja existente
+        } else {
+          printf("Informe o nome do Cliente: \n");
+          scanf("%154s", novoCliente.nome);
+
+          novoCliente.id = contadorID;
+          novoCliente.numeroConta = contadorID;
+          novoCliente.saldo = 0;
+
+          fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
+          fwrite(&novoCliente, sizeof(cliente), 1, listaClientes);
+        }
         break;
+      };
       case 2:
         break;
       case 3:
