@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 
+void limpaBufferTexto() {
+  printf("\n O valor digitado foi um texto em vez de um número. \n");
+  while (getchar() != '\n');
+}
+
 int menu() {
   int opcao;
   printf("\n1. Cadastrar um novo cliente em uma posição específica. \n2. "
@@ -11,9 +16,12 @@ int menu() {
          "um cliente. \n4. Encerra conta (remover cliente). \n5. Listar todos "
          "os clientes. \n6. Restaurar a leitura do arquivo do início com "
          "`rewind()` para repetir a listagem. \n7. Encerrar.\n");
-  scanf("%d", &opcao);
+  if ((scanf("%d%*c", &opcao)) != 1) {
+    limpaBufferTexto();
+  };
   return opcao;
 }
+
 
 typedef struct Cliente {
   int id;          // 4 bytes
@@ -24,7 +32,6 @@ typedef struct Cliente {
 
 int main(void) {
   int escolha;
-  int contadorID = 0;
   FILE *listaClientes;
   listaClientes = fopen("clientes.dat", "rb+");
 
@@ -37,12 +44,14 @@ int main(void) {
       switch (escolha) {
       case 1: {
 
-        contadorID += 1;
         int posicao;
         cliente novoCliente;
 
         printf("Informe a posição que deseja cadastrar o Cliente: \n");
-        scanf("%d%*c", &posicao);
+        if ((scanf("%d%*c", &posicao)) != 1) {
+          limpaBufferTexto();
+          break;
+        };
 
         fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
         int teste = fread(&novoCliente, sizeof(cliente), 1, listaClientes);
@@ -55,14 +64,14 @@ int main(void) {
           fgets(novoCliente.nome, sizeof(novoCliente.nome), stdin);
           novoCliente.nome[strcspn(novoCliente.nome, "\n")] = '\0';
 
-          novoCliente.id = contadorID;
-          novoCliente.numeroConta = contadorID;
+          novoCliente.id = posicao;
+          novoCliente.numeroConta = posicao;
           novoCliente.saldo = 0;
 
           fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
           fwrite(&novoCliente, sizeof(cliente), 1, listaClientes);
+          break;
         }
-        break;
       };
       case 2: {
 
@@ -70,10 +79,14 @@ int main(void) {
         cliente contaConsultada;
         printf("Digite o número da conta do cliente que vôce deseja consultar: "
                "\n");
-        scanf("%d", &numeroConta);
+        if ((scanf("%d%*c", &numeroConta) != 1)) {
+          limpaBufferTexto();
+          break;
+        };
 
         fseek(listaClientes, sizeof(cliente) * numeroConta, SEEK_SET);
-        if (fread(&contaConsultada, sizeof(cliente), 1, listaClientes) == 1 && contaConsultada.id != 0) {
+        if (fread(&contaConsultada, sizeof(cliente), 1, listaClientes) == 1 &&
+            contaConsultada.id != 0) {
 
           printf("\n Nome: %s \n Saldo: %.2f. \n Conta: %d. \n",
                  contaConsultada.nome, contaConsultada.saldo,
@@ -89,16 +102,25 @@ int main(void) {
         int resposta;
         int numConta;
         printf("Qual o número da conta que deseja fazer alteração? \n");
-        scanf("%d", &numConta);
+        if ((scanf("%d%*c", &numConta)) != 1) {
+          limpaBufferTexto();
+          break;
+        }
 
         fseek(listaClientes, sizeof(cliente) * numConta, SEEK_SET);
         if (fread(&clienteSaldo, sizeof(cliente), 1, listaClientes) != 0) {
           printf(" 1-Adicionar Saldo \n 2-Remover Saldo? \n");
-          scanf("%d", &resposta);
+          if ((scanf("%d%*c", &resposta)) != 1) {
+            limpaBufferTexto();
+            break;
+          };
 
           if (resposta == 1) {
             printf("Digite a quantia de saldo a ser atualizada: ");
-            scanf("%f", &novoSaldo);
+            if ((scanf("%f%*c", &novoSaldo)) != 1) {
+                limpaBufferTexto();
+                break;
+            };
 
             clienteSaldo.saldo = clienteSaldo.saldo + novoSaldo;
 
@@ -106,7 +128,10 @@ int main(void) {
             fwrite(&clienteSaldo, sizeof(cliente), 1, listaClientes);
           } else if (resposta == 2) {
             printf("Digite a quantidade de saldo a ser removido: ");
-            scanf("%f", &novoSaldo);
+            if ((scanf("%f%*c", &novoSaldo)) != 1) {
+                limpaBufferTexto();
+                break;
+            };
 
             clienteSaldo.saldo = clienteSaldo.saldo - novoSaldo;
 
@@ -126,7 +151,10 @@ int main(void) {
         cliente clienteRemover;
 
         printf("Digite o número da conta que deseja remover: \n");
-        scanf("%d", &posicao);
+        if ((scanf("%d%*c", &posicao)) != 1) {
+            limpaBufferTexto();
+            break;
+        };
 
         clienteRemover.id = 0;
         clienteRemover.nome[0] = '\0';
@@ -174,7 +202,7 @@ int main(void) {
         break;
       }
       default:
-        printf("A opção digitada é inválida");
+        printf("\n A opção digitada é inválida \n");
         break;
       }
     } while (escolha != 7);
