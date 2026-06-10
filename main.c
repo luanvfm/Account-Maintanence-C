@@ -185,11 +185,7 @@ int main(void) {
         char resposta;
         printf("Você deseja restaurar a ordem de leitura do arquivo de "
                "Clientes? S/N \n");
-        if ((scanf(" %c", &resposta)) != 1) {
-            printf("O valor digitado foi um número em vez de um caractere.");
-            while (getchar() != '\n');
-            break;
-        };
+        scanf(" %c", &resposta);
 
         if (resposta == 'S' || resposta == 's') {
           printf("Ordem de leitura do arquivo restaurada!");
