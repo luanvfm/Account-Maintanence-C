@@ -2,6 +2,7 @@
 // PARA DEBUGAR -> F5
 
 #include <stdio.h>
+#include <string.h>
 
 int menu() {
   int opcao;
@@ -41,7 +42,7 @@ int main(void) {
         cliente novoCliente;
 
         printf("Informe a posição que deseja cadastrar o Cliente: \n");
-        scanf("%d", &posicao);
+        scanf("%d%*c", &posicao);
 
         fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
         int teste = fread(&novoCliente, sizeof(cliente), 1, listaClientes);
@@ -51,7 +52,8 @@ int main(void) {
           break;
         } else {
           printf("Informe o nome do Cliente: \n");
-          scanf("%154s", novoCliente.nome);
+          fgets(novoCliente.nome, sizeof(novoCliente.nome), stdin);
+          novoCliente.nome[strcspn(novoCliente.nome, "\n")] = '\0';
 
           novoCliente.id = contadorID;
           novoCliente.numeroConta = contadorID;
@@ -71,13 +73,13 @@ int main(void) {
         scanf("%d", &numeroConta);
 
         fseek(listaClientes, sizeof(cliente) * numeroConta, SEEK_SET);
-        if (fread(&contaConsultada, sizeof(cliente), 1, listaClientes) != 0) {
+        if (fread(&contaConsultada, sizeof(cliente), 1, listaClientes) == 1 && contaConsultada.id != 0) {
 
-          printf("\n Nome: %s. \n Saldo: %.2f. \n Conta: %d. \n",
+          printf("\n Nome: %s \n Saldo: %.2f. \n Conta: %d. \n",
                  contaConsultada.nome, contaConsultada.saldo,
                  contaConsultada.numeroConta);
         } else {
-          printf("Nenhuma conta encontrada com esse número.");
+          printf("Nenhuma conta encontrada com esse número. \n");
         };
 
       } break;
@@ -119,8 +121,24 @@ int main(void) {
         }
         break;
       }
-      case 4:
+      case 4: {
+        int posicao;
+        cliente clienteRemover;
+
+        printf("Digite o número da conta que deseja remover: \n");
+        scanf("%d", &posicao);
+
+        clienteRemover.id = 0;
+        clienteRemover.nome[0] = '\0';
+        clienteRemover.saldo = 0;
+        clienteRemover.numeroConta = 0;
+
+        fseek(listaClientes, sizeof(cliente) * posicao, SEEK_SET);
+        fwrite(&clienteRemover, sizeof(cliente), 1, listaClientes);
+
         break;
+      }
+
       case 5:
         rewind(listaClientes);
         cliente lerClientes;
