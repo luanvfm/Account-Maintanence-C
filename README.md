@@ -37,10 +37,10 @@ Make sure you have a C compiler (like GCC) installed on your machine.
 2. Open the terminal and navigate to the project folder.
 3. Compile the code with the command:
    ```bash
-   gcc main.c -o bank
+   gcc main.c -o main
 
 Run the generated program:
 
-        On Linux/Mac: ./bank
+        On Linux/Mac: ./main
 
-        On Windows: bank.exe
+        On Windows: main.exe
